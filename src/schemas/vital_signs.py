@@ -12,7 +12,11 @@ class Period(str, Enum):
     month = "month"
     year = "year"
 
+class BloodPressureDTO(BaseModel):
+    systolic: Optional[int] = Field(None)
+    diastolic: Optional[int] = Field(None)
+
 class VitalSignDTO(BaseModel):
     heart_rate: Optional[float] = Field(None)
-    blood_pressure: Optional[str] = Field(None)
+    blood_pressure: Optional[BloodPressureDTO] = Field(None)
     weight: Optional[float] = Field(None)
