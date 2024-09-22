@@ -1,14 +1,11 @@
-from sqlalchemy import Column, Integer, String, DateTime, Float
-from sqlalchemy.ext.declarative import declarative_base
+from pydantic import BaseModel
+from datetime import datetime
 
-Base = declarative_base()
 
-class BloodPressure(Base):
-    __tablename__ = 'blood_pressures'
-
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    blood_pressure = Column(String)
-    timestamp = Column(DateTime)
+class BloodPressure(BaseModel):
+    systolic: str
+    diastolic: str
+    timestamp: datetime
 
     def __repr__(self):
-        return f"[BloodPressure(blood_pressure={self.blood_pressure}, timestamp={self.timestamp})]"
+        return f"[BloodPressure(systolic={self.systolic}, diastolic={self.diastolic}, timestamp={self.timestamp})]"

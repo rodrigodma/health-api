@@ -83,3 +83,4 @@ pydantic
 https://fastapi.tiangolo.com/reference/
 - I tryed to use postgresql using sqlalchemy to acess the data
 - I organized the project separating the concerns using the best practices
+- I prefer not to get into those database configuration right now and spend time in the business logic, so put some db interface to represent it for now, but in the next steps might be do those work.
