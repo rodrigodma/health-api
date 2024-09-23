@@ -39,13 +39,16 @@ We’d like you to build the backend for storing, processing, and retrieving thi
 ```
 ├── src
 │   ├── infra
+│   │   ├── repository.py
 │   │   ├── config.py
 │   │   └── db.py
 │   ├── models
-│   │   ├── heart.py
+│   │   ├── heart_rate.py
 │   │   ├── weight.py
-│   │   └── blood.py
+│   │   └── blood_pressure.py
 │   ├── schemas
+│   │   └── vital_signs.py
+│   ├── services
 │   │   └── vital_signs.py
 │   └── app.py
 └── requirements.txt
@@ -85,3 +88,4 @@ https://fastapi.tiangolo.com/reference/
 - I organized the project separating the concerns using the best practices
 - I prefer not to get into those database configuration right now and spend time in the business logic, so put some db interface to represent it for now, but in the next steps might be do those work.
 - I use the top down approach, starting by the endpoints and interface contracts until the sotre data logics.
+- during the getting of values, the heart rate should be a average of values for each day
