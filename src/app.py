@@ -15,9 +15,5 @@ def save_vital_signs(vital: VitalSignDTO):
 @app.get("/vital-signs/{vital}/overtime")
 def get_overtime_data(vital: VitalSign, 
                       period: Period=Query(None)):
-    result = f'GET vital sign: {vital}'
-    print(result)
-    if period:
-        result = f'{result} with period: {period}'
-        print(result)
+    result = vital_sign_service.get(vital, period)
     return result
