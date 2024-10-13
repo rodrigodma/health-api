@@ -82,10 +82,10 @@ pydantic
    ```
 
 **Observations**
-- I'm checking the official docs of FastAPI during the development:
+- I'm using the official docs of FastAPI during the development as reference:
 https://fastapi.tiangolo.com/reference/
-- I tryed to use postgresql using sqlalchemy to acess the data
-- I organized the project separating the concerns using the best practices
-- I prefer not to get into those database configuration right now and spend time in the business logic, so put some db interface to represent it for now, but in the next steps might be do those work.
-- I use the top down approach, starting by the endpoints and interface contracts until the sotre data logics.
-- during the getting of values, the heart rate should be a average of values for each day
+- I would use postgresql with sqlalchemy to acess the data;
+- I organized the project separating the concerns using the best practices;
+- I use the top down approach, starting by the endpoints and interface contracts until store data logics.
+- during the getting of values, the blood pressure should be a average of values for each day?
+- should I group the data by weeks when the overtime graph was filtered by month and group by month when was by year?
