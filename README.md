@@ -1,4 +1,4 @@
-# Carda Health API
+# Health API
 ## The scenario
 Suppose that we have an existing smartphone app that allows patients to chat with their doctor.
 We want to extend this app so we can record information about the patient’s vital signs.
