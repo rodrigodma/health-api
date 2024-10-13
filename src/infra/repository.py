@@ -8,6 +8,8 @@ from src.models.blood_pressure import BloodPressure
 from src.models.heart_rate import HeartRate
 from src.models.weight import Weight
 
+from statistics import mean
+
 WEEK_DAYS=7
 MONTH_DAYS=30
 YEAR_DAYS=365
@@ -23,15 +25,19 @@ class Repository(ABC):
         """Retrieves vital sign data from the database."""
         pass
 
-    def _filter_period(self, data = {}, period: str=None):
-        result = [values for keys, values in self.data.items()]
+    def _filter_period(self, period: str=None):
+        result = {keys : values for keys, values in self.data.items()}
+        days = None
 
         if period == Period.week:
-            result = [values for keys, values in self.data.items() if keys > datetime.now() - timedelta(days=WEEK_DAYS)]
+            days=WEEK_DAYS
         elif period == Period.month:
-            result = [values for keys, values in self.data.items() if keys > datetime.now() - timedelta(days=MONTH_DAYS)]
+            days=MONTH_DAYS
         elif period == Period.year:
-            result = [values for keys, values in self.data.items() if keys > datetime.now() - timedelta(days=YEAR_DAYS)]
+            days=YEAR_DAYS
+        
+        if days:
+            result = {keys : values for keys, values in self.data.items() if keys > datetime.now() - timedelta(days)}
         
         return result
 
@@ -43,7 +49,24 @@ class HeartRateRepository(Repository):
         self.data[heart_data.timestamp] = heart_data
 
     def get(self, period: str=None):
-        return self._filter_period(self.data, period)
+        resulting_signals = {}
+        signals_by_day = {}
+        filtered_signals = self._filter_period(period)
+        
+        for timestamp, signal in filtered_signals.items():
+            day = datetime.strftime(timestamp, "%Y-%m-%d")
+            if day not in signals_by_day:
+                signals_by_day[day] = []
+            signals_by_day[day].append(signal.heart_rate)
+        
+        for day, signals in signals_by_day:
+            if day not in resulting_signals:
+                resulting_signals[day] = {"min": 0.0, "max": 0.0}
+            sorted_signals = sorted(signals)
+            resulting_signals[day]["min"] = min(sorted_signals)
+            resulting_signals[day]["max"] = max(sorted_signals)
+        
+        return resulting_signals
 
 class BloddPressureRepository(Repository):
     def __init__(self):
@@ -53,7 +76,25 @@ class BloddPressureRepository(Repository):
         self.data[blood_pressure.timestamp] = blood_pressure
 
     def get(self, period: str=None):
-        return self._filter_period(self.data, period)
+        resulting_signals = {}
+        signals_by_day = {}
+        filtered_signals = self._filter_period(period)
+        
+        for timestamp, signal in filtered_signals.items():
+            day = datetime.strftime(timestamp, "%Y-%m-%d")
+            if day not in signals_by_day:
+                signals_by_day[day] = {"systolic": [], "diastolic": []}
+            signals_by_day[day]["systolic"].append(signal.systolic)
+            signals_by_day[day]["diastolic"].append(signal.diastolic)
+        
+        for day, signals in signals_by_day:
+            if day not in resulting_signals:
+                resulting_signals[day] = {"systolic": 0.0, "diastolic": 0.0}
+            
+            resulting_signals[day]["systolic"] = mean(signals["systolic"])
+            resulting_signals[day]["diastolic"] = mean(signals["diastolic"])
+        
+        return resulting_signals
 
 class WeightRepository(Repository):
     def __init__(self):
@@ -63,4 +104,11 @@ class WeightRepository(Repository):
         self.data[weight.timestamp] = weight
 
     def get(self, period: str=None):
-        return self._filter_period(self.data, period)
+        resulting_signals = {}
+        filtered_signals = self._filter_period(period)
+        
+        for timestamp, signal in filtered_signals.items():
+            day = datetime.strftime(timestamp, "%Y-%m-%d")
+            resulting_signals[day] = signal.weight
+        
+        return resulting_signals
